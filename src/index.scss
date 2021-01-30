@@ -1,0 +1,16 @@
+$commoFontSize: 14px;
+$backgroundColor: #fff;
+$textColorBlack: #000;
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-size: $commoFontSize;
+    background-color: $backgroundColor;
+    height: 100vh;
+    font-family: 'Roboto', Helvetica, Arial, sans-serif;
+    color: $textColorBlack;
+    margin: 0;
+}
