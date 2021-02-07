@@ -8,9 +8,11 @@ export const forObjCreateBtn = () => {
   )
     .toISOString()
     .substr(0, 10);
+
+  const startDate = new Date(startD)
   const endD =
     endHour === 0
-      ? new Date(startD.setDate(startD.getDate() + 1))
+      ? new Date(startDate.setDate(startDate.getDate() + 1))
           .toISOString()
           .substr(0, 10)
       : startD;

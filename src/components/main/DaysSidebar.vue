@@ -5,14 +5,13 @@
     :key="hourPeriod"
     :data-hour-number="index"
   >
-    <div v-for="(event, i) in eventObjects(index)" :key="i">
-      <EventObject
-        v-if="event"
-        :key="event.id"
-        :objectElem="event"
-        :onShowFormOnEditing="onShowFormOnEditing"
-      />
-    </div>
+    <EventObject
+      :onShowFormOnEditing="onShowFormOnEditing"
+      :index="index"
+      :arrayOfEventsForRender="arrayOfEventsForRender"
+      :arrDaysOfWeek="arrDaysOfWeek"
+      :dayNumber="dayNumber"
+    />
     <RedLine v-if="isRedLine(index)" :positionOfRedLine="positionOfRedLine" />
   </div>
 </template>
@@ -37,6 +36,7 @@ export default {
     return {
       currentDate: new Date(),
       placeForEventObject: false,
+      eventsData: [],
     };
   },
   computed: {
@@ -48,23 +48,26 @@ export default {
   },
   methods: {
     eventObjects(index) {
-      return this.arrayOfEventsForRender.map((objectElem) => {
-        this.arrDaysOfWeek.forEach((day) => {
-          if (
-            objectElem.startDate.getDay() === this.dayNumber &&
-            moment(objectElem.startDate).format("l") ===
-              moment(day).format("l") &&
-            objectElem.startDate.getHours() === index
-          ) {
-            this.placeForEventObject = true;
+      this.eventsData = this.arrayOfEventsForRender
+        .map((objectElem) => {
+          this.arrDaysOfWeek.forEach((day) => {
+            if (
+              objectElem.startDate.getDay() === this.dayNumber &&
+              moment(objectElem.startDate).format("l") ===
+                moment(day).format("l") &&
+              objectElem.startDate.getHours() === index
+            ) {
+              this.placeForEventObject = true;
+            }
+          });
+          if (this.placeForEventObject) {
+            this.placeForEventObject = false;
+            return objectElem;
           }
-        });
-        if (this.placeForEventObject) {
-          this.placeForEventObject = false;
-          return objectElem;
-        }
-        return null;
-      });
+          return null;
+        })
+        .filter((item) => item);
+      return this.eventsData.length > 0;
     },
     isRedLine(index) {
       return (

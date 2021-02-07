@@ -60,7 +60,6 @@
           alt="mutiline"
         />
         <textarea
-          type="text"
           class="multiline__text"
           placeholder="add description"
           name="description"

@@ -75,13 +75,12 @@ export default {
       onLateEditing: false,
       interval: null,
       tempObj: null,
+      arrayOfEventsForRender: [],
     };
   },
-  create() {
+  created() {
     this.interval = setInterval(() => {
-      this.setState({
-        positionOfRedLine: getPosOfRedLine(),
-      });
+      this.positionOfRedLine = getPosOfRedLine();
     }, 1000);
     this.onRenderAfterGetData();
   },
@@ -89,9 +88,10 @@ export default {
     clearInterval(this.interval);
   },
   computed: {
-    arrayOfEventsForRender() {
-      return forChangingEventsArray(this.arrayOfEvents);
-    },
+    // arrayOfEventsForRender() {
+    //   // return forChangingEventsArray(this.arrayOfEvents);
+    //   return [];
+    // },
     arrDaysOfWeek() {
       return generateArrayOfCurrentWeek(this.firstDayOfWeek);
     },
@@ -102,7 +102,10 @@ export default {
   methods: {
     onRenderAfterGetData() {
       fetchForGetData()
-        .then((array) => (this.arrayOfEvents = array))
+        .then((array) => {
+          this.arrayOfEvents = array;
+          this.arrayOfEventsForRender = forChangingEventsArray(array);
+        })
         .catch(() => alert("Internal Server Error. Can`t display events"));
     },
     onTodayButton() {
@@ -111,7 +114,7 @@ export default {
     onArrowBtns(event) {
       this.firstDayOfWeek = onGenerateAnotherfirstDayOfWeek(
         event,
-        this.state.firstDayOfWeek
+        this.firstDayOfWeek
       );
     },
     hideForm() {
@@ -119,6 +122,7 @@ export default {
       this.isEditing = false;
       this.onLateEditing = false;
       this.validateText = "";
+      this.tempObj = null;
     },
     showFormOnCreateButton() {
       this.tempObj = forObjCreateBtn();
@@ -143,7 +147,7 @@ export default {
       this.isOpen = true;
       this.validateText = onClickValidate(
         { ...this.tempObj },
-        this.state.arrayOfEvents
+        this.arrayOfEvents
       );
     },
     showFormOnEditing(event) {
